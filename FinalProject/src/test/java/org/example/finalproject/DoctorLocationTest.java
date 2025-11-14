@@ -1,8 +1,8 @@
 package org.example.finalproject;
 
-import com.example.finalproject.model.DoctorLocation;
+import org.example.finalproject.model.DoctorLocation;
 import org.junit.jupiter.api.Test;
-
+import static org.junit.jupiter.api.Assertions.*;
 public class DoctorLocationTest {
 
     @Test

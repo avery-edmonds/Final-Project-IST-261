@@ -1,8 +1,9 @@
 package org.example.finalproject;
 
-import com.example.finalproject.model.Doctor;
-import com.example.finalproject.model.Document;
-import com.example.finalproject.model.User;
+import org.example.finalproject.model.Doctor;
+import org.example.finalproject.model.Document;
+import org.example.finalproject.model.User;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 public class DocumentTest {

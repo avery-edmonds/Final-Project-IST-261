@@ -1,7 +1,6 @@
 package org.example.finalproject.model;
 
 import jakarta.persistence.*;
-
 import java.util.List;
 
 @Entity
@@ -11,9 +10,13 @@ public class Doctor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int docId;
 
+    @Column(name = "doc_firstname")
     private String docFirstname;
+    @Column(name = "doc_lastname")
     private String docLastname;
+    @Column(name = "doctorate")
     private String doctorate;
+    @Column(name = "docimage_url")
     private String doctorImage;
 
     @ManyToOne

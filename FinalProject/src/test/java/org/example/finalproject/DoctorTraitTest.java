@@ -1,10 +1,10 @@
 package org.example.finalproject;
 
-import com.example.finalproject.model.Doctor;
-import com.example.finalproject.model.DoctorTrait;
-import com.example.finalproject.model.DoctorType;
+import org.example.finalproject.model.Doctor;
+import org.example.finalproject.model.DoctorTrait;
+import org.example.finalproject.model.DoctorType;
 import org.junit.jupiter.api.Test;
-
+import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 

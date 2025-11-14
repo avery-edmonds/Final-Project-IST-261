@@ -1,8 +1,8 @@
 package org.example.finalproject;
 
-import com.example.finalproject.model.User;
+import org.example.finalproject.model.User;
 import org.junit.jupiter.api.Test;
-
+import static org.junit.jupiter.api.Assertions.*;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertNull;

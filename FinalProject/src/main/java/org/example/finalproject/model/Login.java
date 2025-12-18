@@ -9,7 +9,7 @@ public class Login {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private Long loginId;
+    private int loginId;
     private String username;
     private String password;
 
@@ -25,10 +25,10 @@ public class Login {
         this.password = password;
     }
 
-    public Long getLoginId() {
+    public int getLoginId() {
         return loginId;
     }
-    public void setLoginId(Long loginId) {
+    public void setLoginId(int loginId) {
         this.loginId = loginId;
     }
     public String getUsername() {

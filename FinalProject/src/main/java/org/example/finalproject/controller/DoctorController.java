@@ -15,7 +15,6 @@ public class DoctorController {
 
     public DoctorController(DoctorService doctorService) {
         this.doctorService = doctorService;
-
     }
 
     @GetMapping("/doctors")
@@ -32,6 +31,11 @@ public class DoctorController {
         } else {
             return doctorService.findAllDoctors();
         }
+    }
+
+    @GetMapping("/doctor/{id}")
+    public Doctor getDoctor(@PathVariable Integer id) {
+        return doctorService.findDoctorById(id);
     }
 
     @GetMapping("/by-type/{docTypeId}")

@@ -1,0 +1,177 @@
+<html data-bs-theme="light">
+    <head>
+        <title>MyMed</title>
+        <link rel="icon" href="favicon.ico" type="image/x-icon" href="index.html">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    </head>
+    <body style = "background-color: #e8e8e8">
+        <nav class="navbar navbar-expand-md navbar-dark bg-primary">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="index.html"><img src="mymed.png" alt="MyMed logo"  style="height: 30;"></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item"><a class="nav-link" href="index.html">Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link" href="mydoctors.html">My Doctors</a></li>
+                        <li class="nav-item"><a class="nav-link" href="communications.html">My Communications</a></li>
+                        <li class="nav-item"><a class="nav-link" href="doctors.html">Find Doctors</a></li>
+                    </ul>
+                    
+                        <div class="dropdown">
+                        <button class="btn btn-light dropdown-toggle d-flex align-items-center" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span id="userName">User</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" id="userDropdown">
+                            <li><a class="dropdown-item" href="#" onclick="savePage();" >My Profile</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="#" onclick="logout();">Logout</a></li>
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </nav>
+
+
+<body class="bg-light">
+<div class="container mt-4">
+
+    <a href="mydoctors.html" class="btn btn-secondary mb-3">← Back to My Doctors</a>
+
+    <div class="card shadow p-4">
+        <div class="row">
+            <div class="col-md-4 text-center">
+                <img id="docImg" 
+                     class="img-thumbnail mb-3" 
+                     style="width:250px; height:250px; object-fit:cover;">
+                <button class="btn btn-danger mt-3" id="removeBtn">
+                    Remove from My Doctors
+                </button>
+            </div>
+
+            <div class="col-md-8">
+                <h2 id="docName"></h2>
+                <hr>
+                <p><strong>Specialty:</strong> <span id="docType"></span></p>
+                <p><strong>Location:</strong> <span id="docLocation"></span></p>
+                <p><strong>City:</strong> <span id = "docCity"></span></p>
+                <h4 class="mt-4">Location Map</h4>
+                <iframe
+                    id="mapFrame"
+                    width="100%"
+                    height="300"
+                    style="border:0; border-radius: 10px;"
+                    loading="lazy"
+                    allowfullscreen></iframe>
+                
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const API_URL = "http://localhost:8080/api"; 
+    const userId = 1;
+
+    const params = new URLSearchParams(window.location.search);
+    const doctorId = params.get("mydocid");
+    
+    async function loadDoctor() {
+        try {
+            const res = await fetch(`${API_URL}/doctor/${doctorId}`);            
+            const doctor = await res.json();
+            const locationText = doctor.docLocation ? `${doctor.docLocation.locationName}`: null;
+
+            document.getElementById("docName").innerText =
+                `${doctor.docFirstName} ${doctor.docLastName} ${doctor.doctorate}`;
+
+            document.getElementById("docImg").src = doctor.doctorImage;
+
+            document.getElementById("docType").innerText =
+                doctor.docType?.typeName ?? "Unknown";
+
+            document.getElementById("docLocation").innerText =
+                doctor.docLocation
+                    ? `${doctor.docLocation.locationName}`: "Unknown";
+
+            document.getElementById("docCity").innerText =
+                doctor.docLocation
+                    ? `${doctor.docLocation.city}, ${doctor.docLocation.state}`
+                    : "Unknown";
+
+            if (locationText) {
+                document.getElementById("mapFrame").src =
+                `https://www.google.com/maps?q=${encodeURIComponent(locationText)}&output=embed`;
+            } else {
+                document.getElementById("mapFrame").style.display = "none";
+            }
+
+        } catch (err) {
+            console.error("Failed to load doctor:", err);
+            alert("Error loading doctor information.");
+        }
+    }
+
+    
+    async function removeDoctor() {
+        const userId = 1; 
+
+        try {
+            const response = await fetch(`${API_URL}/user/${userId}/mydoctors/${doctorId}`, {
+                method: "DELETE"
+            });
+
+            if (response.ok) {
+            alert("Doctor removed from your list.");
+            window.location.href = "mydoctors.html";
+            } else {
+            alert("Failed to remove doctor.");
+            }
+        } catch (err) {
+            console.error("Failed to remove doctor:", err);
+            alert("Error removing doctor.");
+        }
+    }
+
+    async function loadUserInfo() {
+        try {
+            const response = await fetch(`http://localhost:8080/users/${userId}`);
+            if (response.ok) {
+                const user = await response.json();
+                        
+                document.getElementById('userName').textContent = user.firstName + " " + user.lastName || 'User';
+                        
+            }
+        } catch (error) {
+            console.error('Error loading user info:', error);
+        }
+    }
+
+        loadUserInfo(); 
+
+        async function savePage() {
+          localStorage.setItem("lastPage", "mydoctors.html");
+          window.location.href="profile.html";
+
+        }
+
+    async function logout() {
+        localStorage.removeItem("userId");
+        window.location.href="login.html";
+    }
+
+    document.getElementById("removeBtn").addEventListener("click", removeDoctor);
+
+    loadDoctor();
+</script>
+
+</body>
+</html>
+
+    </body>
+</html>

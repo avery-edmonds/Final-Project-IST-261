@@ -23,6 +23,5 @@ public class UserTest {
         assertEquals("scienceguy@gmail.com", user.getEmail());
         assertEquals(LocalDate.of(1955, 11, 27), user.getBirthDate());
         assertEquals("Independence", user.getInsurance());
-        assertNull(user.getUserId()); // auto-generated in DB
     }
 }

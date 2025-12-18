@@ -15,25 +15,26 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-    // Get all users
     @GetMapping
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-    // Get a specific user by ID
+    @GetMapping("exists/email")
+    public boolean existsByEmail(@RequestParam String email) {
+        return userRepository.existsByEmail(email);
+    }
+
     @GetMapping("/{id}")
     public User getUserById(@PathVariable int id) {
         return userRepository.findById(id).orElse(null);
     }
 
-    // Create new user
     @PostMapping
     public User createUser(@RequestBody User user) {
         return userRepository.save(user);
     }
 
-    // Update existing user
     @PutMapping("/{id}")
     public User updateUser(@PathVariable int id, @RequestBody User userDetails) {
         return userRepository.findById(id).map(user -> {
@@ -46,7 +47,6 @@ public class UserController {
         }).orElse(null);
     }
 
-    // Delete user
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable int id) {
         userRepository.deleteById(id);

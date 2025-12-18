@@ -16,7 +16,7 @@ public class Doctor {
     private String docLastname;
     @Column(name = "doctorate")
     private String doctorate;
-    @Column(name = "docimage_url")
+    @Column(name = "docimage_url", columnDefinition = "TEXT")
     private String doctorImage;
 
     @ManyToOne

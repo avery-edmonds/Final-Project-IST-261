@@ -1,0 +1,232 @@
+<html data-bs-theme="light">
+    <head>
+        <title>MyMed</title>
+        <link rel="icon" href="favicon.ico" type="image/x-icon" href="index.html">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    </head>
+    <body style = "background-color: #e8e8e8">
+        <nav class="navbar navbar-expand-md navbar-dark bg-primary">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="index.html"><img src="mymed.png" alt="MyMed logo"  style="height: 30;"></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item"><a class="nav-link" href="index.html">Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link" href="mydoctors.html">My Doctors</a></li>
+                        <li class="nav-item"><a class="nav-link" href="communications.html">My Communications</a></li>
+                        <li class="nav-item"><a class="nav-link" href="doctors.html">Find Doctors</a></li>
+                    </ul>
+                    
+                        <div class="dropdown">
+                        <button class="btn btn-light dropdown-toggle d-flex align-items-center" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span id="userName">User</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" id="userDropdown">
+                            <li><a class="dropdown-item" href="#" onclick="savePage();" >My Profile</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="#" onclick="logout();">Logout</a></li>
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </nav>
+
+
+<div class="container mt-4">
+
+    <a href="" id="backButton" class="btn btn-secondary mb-3">← Back to last page</a>
+
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card shadow sidebar-nav">
+                    <div class="card-body p-3">
+                        <nav class="nav flex-column">
+                            <div class="btn-group-vertical" role="group" aria-label="Vertical radio toggle button group">
+                                <input type="radio" class="btn-check" onclick="showTab('profile', this)" name="vbtn-radio" id="vbtn-radio1" autocomplete="off" checked>
+                                <label class="btn btn-outline-primary" for="vbtn-radio1">Profile</label>
+                                <input type="radio" class="btn-check" onclick="showTab('settings', this)" name="vbtn-radio" id="vbtn-radio2" autocomplete="off">
+                                <label class="btn btn-outline-primary" for="vbtn-radio2">Settings</label>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div id="alertContainer">
+                    <div id="profileTab" class="card shadow">
+                        <div class="card-body p-4">
+                            <h2 id="profileUserName"></h2>
+                            <hr>
+                            <p><strong>Name:</strong> <span id="userFullName"></span></p>
+                            <p><strong>Birth Date:</strong> <span id="userDob"></span></p>
+                            <p><strong>Insurance Company:</strong> <span id = "userInsurance"></span></p>
+                            <p><strong>Email:</strong> <span id = "userEmail"></span></p>
+                            <p><strong>Username:</strong> <span id = "userUsername"></span></p>
+                        </div>
+                    </div>
+                    <div id="settingsTab" class="card shadow" style="display: none;">
+                        <div class="card-body p-4">
+                            <h2>Settings</h2>
+                            <p class="text-muted">Update your settings here</p>
+                            <hr>
+                            <form id="settingsForm">
+                                <p><strong>Date Format: </strong>
+                                <label for="dateFormat">Date Format:</label>
+                                    <select id="dateFormat" onchange="saveDateFormat()">
+                                        <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                                        <option value="MM-DD-YYYY">MM-DD-YYYY</option>
+                                        <option value="DD-MM-YYYY">DD-MM-YYYY</option>
+                                    </select>
+                                </p>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const root = document.documentElement;
+    const API_URL = "http://localhost:8080"; 
+    const userId = localStorage.getItem("userId");
+
+    if (!userId) {
+        window.location.href = "login.html"; 
+    }
+
+    function showTab(tabName, element) {
+        
+        document.querySelectorAll(".sidebar-nav .nav-link").forEach(link =>{
+            link.classList.remove("active");
+        });
+        element.classList.add("active");
+
+        if(tabName === 'profile'){
+            document.getElementById('profileTab').style.display = 'block';
+            document.getElementById('settingsTab').style.display = 'none';
+        } 
+        else if (tabName === 'settings') {
+                document.getElementById('profileTab').style.display = 'none';
+                document.getElementById('settingsTab').style.display = 'block';
+            }
+    }
+    
+    async function loadUser() {
+        try {
+
+            const uRes = await fetch(`${API_URL}/users/${userId}`);
+            const lRes = await fetch(`${API_URL}/api/login/get/${userId}`)
+            const user = await uRes.json();
+            const login = await lRes.json();
+
+
+            const format = localStorage.getItem("dateFormat") || "YYYY-MM-DD";
+            document.getElementById("dateFormat").value = format;
+
+            const formattedDob = formatDate(user.birthDate, format);
+
+            // Save the raw date for future instant reformatting
+            document.getElementById("userDob").dataset.raw = user.birthDate;
+            document.getElementById("userDob").innerText = formattedDob;
+
+
+            console.log(userId);
+            
+            document.getElementById('userName').textContent = user.firstName + " " + user.lastName || 'User';
+
+            document.getElementById("profileUserName").innerText = `${user.firstName}'s Profile`;
+
+            document.getElementById("userFullName").innerText =
+                `${user.firstName} ${user.lastName}`;
+
+            document.getElementById("userDob").innerText = formattedDob;
+
+            document.getElementById("userEmail").innerText = `${user.email}`;
+
+            document.getElementById("userInsurance").innerText = `${user.insurance}`;
+
+            document.getElementById("userUsername").innerText = `${login.username}`;
+
+        } catch (err) {
+            console.error("Failed to load User:", err);
+            alert("Error loading user information.");
+        }
+    }
+
+    async function setUpBackButton(linkId, storageKey = "lastPage") {
+        const link = document.getElementById(linkId);
+        const url = localStorage.getItem(storageKey) || "index.html";
+        const file = url.split("/").pop().split(".")[0];
+
+        console.log(file);
+
+        const nameMap = {
+            "index": "Dashboard",
+            "communications" : "My Communications",
+            "mydoctors" : "My Doctors",
+            "doctors" : "Find Doctors"
+        };
+        const display = nameMap[file];
+
+        link.href = url
+        link.textContent = `Back to ${display}`;
+    }
+
+    function saveDateFormat() {
+         const format = document.getElementById("dateFormat").value;
+        localStorage.setItem("dateFormat", format);
+
+        const dob = document.getElementById("userDob").dataset.raw;
+        document.getElementById("userDob").innerText = formatDate(dob, format);
+    }
+
+    function formatDate(dateStr, format) {
+        console.log("Format function got:", dateStr, format);
+        const d = new Date(dateStr);
+        const year = d.getFullYear();
+        const month = `${d.getMonth() + 1}`.padStart(2, "0");
+        const day = `${d.getDate()}`.padStart(2, "0");
+
+        switch (format) {
+            case "MM-DD-YYYY":
+                return `${month}-${day}-${year}`;
+            case "DD-MM-YYYY":
+                return `${day}-${month}-${year}`;
+            case "Month DD, YYYY":
+                return d.toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric"
+                });
+            default:
+                return `${year}-${month}-${day}`; // YYYY-MM-DD
+        }
+    }   
+
+    setUpBackButton("backButton");
+
+
+    async function logout() {
+                localStorage.removeItem("userId");
+                window.location.href="login.html";
+    }
+    
+    window.onload = loadUser;
+
+   
+</script>
+
+</body>
+</html>
+
+    </body>
+</html>

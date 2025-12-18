@@ -10,11 +10,11 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private Long userId;
+    private int userId;
     private String firstName;
     private String lastName;
     private String email;
-    private LocalDate birthDate;
+    private LocalDate dateOfBirth;
     private String insurance;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
@@ -22,11 +22,10 @@ public class User {
 
 
 
-
-    public Long getUserId() {
+    public int getUserId() {
         return userId;
     }
-    public void setUserId(Long userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
     public String getFirstName() {
@@ -48,10 +47,10 @@ public class User {
         this.email = email;
     }
     public LocalDate getBirthDate() {
-        return birthDate;
+        return dateOfBirth;
     }
     public void setBirthDate(LocalDate birthDate) {
-        this.birthDate = birthDate;
+        this.dateOfBirth = birthDate;
     }
     public String getInsurance() {
         return insurance;

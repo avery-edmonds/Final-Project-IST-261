@@ -26,15 +26,6 @@ public class DoctorService {
         return doctorRepository.findById(id).orElse(null);
     }
 
-    public Doctor saveDoctor(Doctor doctor) {
-        return doctorRepository.save(doctor);
-    }
-
-    public void deleteDoctorById(int id) {
-        doctorRepository.deleteById(id);
-    }
-
-
     public List<Doctor> findDoctorByType(int docTypeId) {
         return doctorRepository.findByDocTypeDoctypeId(docTypeId);
     }
@@ -50,4 +41,5 @@ public class DoctorService {
     public List<Doctor> findByDocTypeDoctypeId(Integer typeId) {
         return doctorRepository.findByDocTypeDoctypeId(typeId);
     }
+
 }

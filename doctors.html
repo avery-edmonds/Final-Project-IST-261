@@ -1,57 +1,112 @@
-<html>
-<head>
-  <title>MyMed</title>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</head>
+<html data-bs-theme="light">
+    <head>
+        <title>MyMed</title>
+        <link rel="icon" href="favicon.ico" type="image/x-icon" href="index.html">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    </head>
+    <body style = "background-color: #e8e8e8">
+        <nav class="navbar navbar-expand-md navbar-dark bg-primary">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="index.html"><img src="mymed.png" alt="MyMed logo"  style="height: 30;"></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item"><a class="nav-link" href="index.html">Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link" href="mydoctors.html">My Doctors</a></li>
+                        <li class="nav-item"><a class="nav-link" href="communications.html">My Communications</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="doctors.html">Find Doctors</a></li>
+                    </ul>
+                    
+                        <div class="dropdown">
+                        <button class="btn btn-light dropdown-toggle d-flex align-items-center" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span id="userName">User</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" id="userDropdown">
+                            <li><a class="dropdown-item" href="#" onclick="savePage();" >My Profile</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="#" onclick="logout();">Logout</a></li>
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </nav>
 
-<body style="background-color: #e8e8e8;">
-  <nav class="navbar navbar-expand-md navbar-dark bg-primary">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">MyMed</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
-        <ul class="navbar-nav">
-          <li class="nav-item"><a class="nav-link" href="index.html">Dashboard</a></li>
-          <li class="nav-item"><a class="nav-link" href="mydoctors.html">My Doctors</a></li>
-          <li class="nav-item"><a class="nav-link" href="communications.html">My Communications</a></li>
-          <li class="nav-item"><a class="nav-link active" href="doctors.html">Find Doctors</a></li>
-        </ul>
-        <a class="btn btn-light text-primary" href="#">Login</a>
-      </div>
-    </div>
-  </nav>
+  <style>
+    #typeDropdown,
+    #locationDropdown {
+      background-color: #0D6EFD;
+    }
+
+    #typeDropdown option,
+    #locationDropdown option {
+      background-color: #6da7fd;
+    }
+
+    .select-button {
+      background-color: #0d6efd;
+      color: white;
+      border: 1px solid #0a58ca;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+  </style>
 
   <main class="container mt-5">
     <div class="mb-3">
-      <label for="typeDropdown" class="form-label">Filter by Specialty:</label>
-      <select id="typeDropdown" class="form-select">
-        <option value="">All Specialties</option>
-      </select>
-      <label for="locationDropdown" class="form-label">Filter by Location</label>
-      <select id="locationDropdown" class="form-select">
+      <div class="row">
+        <div class="col-md-4">
+          <label for="typeDropdown" class="form-label">Filter by Specialty: </label>
+          <select id="typeDropdown" class="form-select select-button">
+            <option value="">All Specialties</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label for="locationDropdown" class="form-label">Filter by Location: </label>
+          <select id="locationDropdown" class="form-select select-button">
         <option value="">All Locations</option>
       </select>
     </div>
+  </div>
+</div>
 
-    <table class="table table-striped table-bordered" id="doctorTable">
-      <thead class="thead-dark">
-        <tr>
-          <th></th>
-          <th>Name</th>
-          <th>Specialty</th>
-          <th>Location</th>
-        </tr>
-      </thead>
-      <tbody id="doctorTableBody"></tbody>
-    </table>
+    <div class="shadow">
+      <table class="table table-striped table-bordered border-dark" id="doctorTable">
+        <style>
+          .table-striped tbody tr:nth-of-type(odd){
+            background-color: white;
+          }
+          .table-striped tbody tr:nth-of-type(even){
+            background-color: #f6f6f6;
+          }
+        </style>
+        <thead class="thead-dark">
+          <tr>
+            <th></th>
+            <th>Name</th>
+            <th>Specialty</th>
+            <th>Location</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="doctorTableBody"></tbody>
+      </table>
+    </div>
   </main>
 
   <script>
     const API_URL = "http://localhost:8080/api";
+    const userId = localStorage.getItem("userId");
+
+    if (!userId) {
+      window.location.href = "login.html";
+    }
 
     async function loadTypes() {
       const res = await fetch(`${API_URL}/doctortype`);
@@ -80,7 +135,7 @@
     }
 
     let selectedTypeId = "";
-let selectedLocationId = "";
+    let selectedLocationId = "";
 
     async function loadDoctors(typeId = "", locationId = "") {
         let url = `${API_URL}/doctors`;
@@ -95,31 +150,76 @@ let selectedLocationId = "";
         const tbody = document.querySelector("#doctorTableBody");
         tbody.innerHTML = "";
 
-        doctors.forEach(p => {
+        doctors.forEach(d => {
             const tr = document.createElement("tr");
             tr.innerHTML = `
-                <td><img src="${p.doctorImage}" class="img-thumbnail" style="width:100px; height:100px; object-fit:cover;"></td>
-                <td>${p.docFirstName} ${p.docLastName} ${p.doctorate}</td>
-                <td>${p.docType ? p.docType.typeName : "-"}</td>
-                <td>${p.docLocation ? `${p.docLocation.city}, ${p.docLocation.state}` : "-"}</td>
+                <td><img src="${d.doctorImage}" class="img-thumbnail" style="width:100px; height:100px; object-fit:cover;"></td>
+                <td>${d.docFirstName} ${d.docLastName} ${d.doctorate}</td>
+                <td>${d.docType ? d.docType.typeName : "-"}</td>
+                <td>${d.docLocation ? `${d.docLocation.city}, ${d.docLocation.state}` : "-"}</td>
+                <td>
+                  <button class = "btn btn-success" onclick="addDoctor(${d.docId})">Add to My List</button>
+                  <button class = "btn btn-primary" onclick="viewDoctor(${d.docId})">View</button>
+                  </td>
                 `;
                 tbody.appendChild(tr);
                 });
     }
 
-// Update type filter
+          async function loadUserInfo() {
+                try {
+                    const response = await fetch(`http://localhost:8080/users/${userId}`);
+                    if (response.ok) {
+                        const user = await response.json();
+                        
+                        document.getElementById('userName').textContent = user.firstName + " " + user.lastName || 'User';
+                        
+                    }
+                } catch (error) {
+                    console.error('Error loading user info:', error);
+                }
+            }
+
+        loadUserInfo(); 
+
+    async function addDoctor(id){
+      const userId = 1;
+
+      await fetch(`${API_URL}/user/${userId}/doctor/${id}`, {
+        method: "POST"
+      });
+
+      alert("Doctor added!");
+    }
+  
+
+
 document.getElementById("typeDropdown").addEventListener("change", (e) => {
     selectedTypeId = e.target.value;
     loadDoctors(selectedTypeId, selectedLocationId);
 });
 
-// Update location filter
+
 document.getElementById("locationDropdown").addEventListener("change", (e) => {
     selectedLocationId = e.target.value;
     loadDoctors(selectedTypeId, selectedLocationId);
 });
 
-// Initial load
+function viewDoctor(id) {
+    window.location.href = `doctorpage.html?doctorId=${id}`;
+}
+
+async function savePage() {
+          localStorage.setItem("lastPage", "doctors.html");
+          window.location.href="profile.html";
+
+        }
+
+async function logout() {
+    localStorage.removeItem("userId");
+    window.location.href="login.html";
+}
+
 loadTypes();
 loadLocations();
 loadDoctors();
